@@ -19,9 +19,9 @@ def generate_data():
     x = np.linspace(-2 * np.pi, 2 * np.pi, num_samples)
     y = np.sin(x) + np.random.randn(num_samples) * 0.1  # 添加少量噪声
     return x.reshape(-1, 1), y.reshape(-1, 1)
+# 这里用于生成大量随机的且带一定偏移量的正弦数据
 
-
-# 数据展示（更详细的统计信息）
+# 数据展示
 def display_data(x, y, n=5):
     print("\n数据集统计:")
     print(f"样本总数: {len(x)}")
@@ -30,12 +30,14 @@ def display_data(x, y, n=5):
     print("\n前5个样本示例:")
     for i in range(min(n, len(x))):
         print(f"X[{i}]: {x[i][0]:.3f} → Y[{i}]: {y[i][0]:.3f}")
-
+# 大致显示一下数据生成的结果
 
 # Xavier初始化
 def xavier_init(size_in, size_out):
     return np.random.randn(size_in, size_out) * np.sqrt(2.0 / (size_in + size_out))
-
+# 之前我们使用的是普通的随机初始化方法，也就是权重大小完全随机，但是这样有一定的问题
+# 比如，当我们输入层的参数很少的时候，但是隐藏层神经元很多的时候。或者简单来说前一层参数很少，下一层参数很多的时候
+# 使用之前的随机初始化方法就会发现，n+1层的每一个参数都是由n层的所有参数乘以权重相加而后经过激活函数计算得来
 
 class SimpleMLP:
     def __init__(self, input_size, hidden_sizes, output_size):
