@@ -68,6 +68,17 @@ def get_user_input():
     return params
 
 # ------------------------- 激活函数 -------------------------
+# 现在常用的激活函数有：Sigmoid、Tanh、ReLU、Leaky ReLU、PReLU、ELU、Swish、GELU、……
+# sigmoid 因为梯度消失问题（x比较大的时候），已经基本被弃用了
+# Tanh 双曲正切，也是存在梯度消失问题，只不过好一点相对sigmoid
+# ReLU 是目前使用最多的一类，正区间无影响，但是负区间为0可能会导致神经元输出总为0（相当于不启用）
+# Leaky ReLU 是ReLU 优化，负区间不是0而是αx，α一般取一个比较小的值
+# PReLU 是Leaky ReLU 的进一步的优化，负区间α可以自主学习修改
+# ELU 是PReLU 的进一步优化，负区间输出是α（e^x-1），好处是负区间平滑收敛，输出均值接近0，加速训练；但是坏处是毫无疑问计算量增加了很多
+# Swish 是sigmoid 的变种计算为 x⋅sigmoid(βx) ，β是可以设定固定或自主学习的一个参数，验证发现它在更深层模型比ReLU表现更好
+# GELU 计算为 x⋅Φ(x) （Φ(x)为标准正态分布的累积分布函数），它结合了ReLU与随机正则化思想，近似实现神经元输入的随机丢弃，在Transformer模型应用比较多（GPT）
+# ……
+
 def relu(z):
     return np.maximum(0, z)
 
@@ -86,7 +97,7 @@ def tanh(z):
 def tanh_derivative(a):
     return 1 - a**2
 
-# ------------------------- 动态MLP模型 -------------------------
+# ------------------------- MLP模型 -------------------------
 class DynamicMLP:
     def __init__(self, layer_sizes, activation):
         self.layer_sizes = layer_sizes
@@ -231,6 +242,34 @@ def save_model(model, save_dir="modules"):
 if __name__ == "__main__":
     # 加载数据
     X_train, y_train, X_test, y_test = load_mnist()
+
+    # 数据可视化检查（主要看样本分布是否较为平均）
+    print("\n=== 数据统计 ===")
+    # 训练集类别分布
+    unique_train, counts_train = np.unique(y_train, return_counts=True)
+    print("训练集类别分布:")
+    for cls, count in zip(unique_train, counts_train):
+        print(f"类别 {cls}: {count} 样本 ({count/len(y_train):.2%})")
+
+    # 测试集类别分布
+    unique_test, counts_test = np.unique(y_test, return_counts=True)
+    print("\n测试集类别分布:")
+    for cls, count in zip(unique_test, counts_test):
+        print(f"类别 {cls}: {count} 样本 ({count/len(y_test):.2%})")
+
+    # 可视化随机样本（查看数据是否对齐）
+    import matplotlib
+    matplotlib.use('TkAgg')  # 强制使用 TkAgg 后端（pycharm问题）
+    import matplotlib.pyplot as plt
+    fig, axes = plt.subplots(3, 3)
+    for ax in axes.flatten():
+        idx = np.random.randint(len(X_train))
+        ax.imshow(X_train[idx].reshape(28,28), cmap='gray')
+        ax.set_title(f"Label: {y_train[idx]}")
+        ax.axis('off')
+    plt.tight_layout()
+    plt.show()
+
 
     # 用户参数
     params = get_user_input()
