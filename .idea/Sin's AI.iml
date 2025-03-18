@@ -5,6 +5,7 @@
       <excludeFolder url="file://$MODULE_DIR$/0.Basic intro" />
       <excludeFolder url="file://$MODULE_DIR$/1.简单输入-计算-输出测试" />
       <excludeFolder url="file://$MODULE_DIR$/2.0多层感知机" />
+      <excludeFolder url="file://$MODULE_DIR$/2.1多层感知机的应用（手写数字识别，原始代码版）" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -13,7 +14,7 @@
     <option name="namespacePackageFolders">
       <list>
         <option value="$MODULE_DIR$/2.0多层感知机" />
-        <option value="$MODULE_DIR$/2.1多层感知机的应用" />
+        <option value="$MODULE_DIR$/2.1多层感知机的应用（手写数字识别，原始代码版）" />
         <option value="$MODULE_DIR$/1.简单输入-计算-输出测试" />
       </list>
     </option>
